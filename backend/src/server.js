@@ -1,5 +1,6 @@
 import express from 'express'
 import { ENV } from './lib/env.js';
+import { connectDB } from './lib/db.js';
 
 
 const app=express();
@@ -8,7 +9,18 @@ const app=express();
 app.get('/',(req,res)=>{
     res.status(200).json({message:'successfor   api'})
 })
-app.listen(ENV.PORT,()=>{
-    console.log('server is running on port',ENV.PORT);
-    
+
+
+const startServer=async()=>{
+    try {
+        await connectDB();
+        app.listen(ENV.PORT,()=>{
+    console.log('server is running on port',ENV.PORT);  
 })
+    } catch (error) {
+        console.log("error connecting to database");
+        
+    }
+}
+
+startServer();
