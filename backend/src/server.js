@@ -14,9 +14,9 @@ const app=express();
 if(ENV.NODE_ENV !== "production"){
 app.use(cors({origin:ENV.CLIENT_URL,credentials:true}))
 }
-
-app.use("/api/inngest",serve({client:inngest,functions}))
 app.use(express.json())
+app.use("/api/inngest",serve({client:inngest,functions}))
+
 const __dirname=path.resolve();
  
 
