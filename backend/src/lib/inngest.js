@@ -1,6 +1,7 @@
 import {Inngest} from 'inngest'
 import { connectDB } from './db.js'
 import User from '../models/User.js'
+import { deleteStreamUser, upsertStreamUser } from './stream.js';
 
 
 
@@ -23,18 +24,26 @@ const syncUser=inngest.createFunction(
     profileImage:image_url
   }
   await User.create(newUser);
+
+  //for stream
+  await upsertStreamUser({
+    id:newUser.clerkId.toString(),
+    name:newUser.name,
+    image:newUser.profileImage
+  });
     }
 )
 
 const deleteUserFromDb=inngest.createFunction(
     {id:"delete-user-from-db"},
-    {event:"clerk/user.deleted"},
+    {event:"clerk/User.deleted"},
     async({event})=>{
   await connectDB();
 
   const {id}=event.data;
 
   await User.deleteOne({clerkId:id});
+  await deleteStreamUser(id.toString())
 
     }
 )
