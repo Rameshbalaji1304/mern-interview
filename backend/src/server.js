@@ -5,6 +5,9 @@ import path from 'path'
 import cors from 'cors'
 import {serve} from 'inngest/express'
 import { functions,inngest } from './lib/inngest.js';
+import {clerkMiddleware} from '@clerk/express'
+import { protectRoute } from './middleware/protectRoute.js';
+import chatRoutes from './routes/chatRoute.js'
 
 
 
@@ -16,19 +19,16 @@ app.use(express.json())
 if(ENV.NODE_ENV !== "production"){
 app.use(cors({origin:ENV.CLIENT_URL,credentials:true}))
 }
+app.use(clerkMiddleware())
 
 app.use("/api/inngest",serve({client:inngest,functions}))
-
-
-
-
- 
+app.use("/api/chat",chatRoutes)
 
 app.get('/',(req,res)=>{
     res.status(200).json({message:'successfor   api'})
 })
-app.get('/health',(req,res)=>{
-    res.status(200).json({message:'health   api'})
+app.get('/video-call',protectRoute,(req,res)=>{
+    res.status(200).json({message:'video call    api'})
 })
 
 
