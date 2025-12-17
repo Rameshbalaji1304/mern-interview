@@ -8,6 +8,7 @@ import { functions,inngest } from './lib/inngest.js';
 import {clerkMiddleware} from '@clerk/express'
 import { protectRoute } from './middleware/protectRoute.js';
 import chatRoutes from './routes/chatRoute.js'
+import sessionRoutes from './routes/sessionRoute.js'
 
 
 
@@ -22,7 +23,9 @@ app.use(cors({origin:ENV.CLIENT_URL,credentials:true}))
 app.use(clerkMiddleware())
 
 app.use("/api/inngest",serve({client:inngest,functions}))
+
 app.use("/api/chat",chatRoutes)
+app.use("/api/session",sessionRoutes)
 
 app.get('/',(req,res)=>{
     res.status(200).json({message:'successfor   api'})
