@@ -25,13 +25,13 @@ app.use(clerkMiddleware())
 app.use("/api/inngest",serve({client:inngest,functions}))
 
 app.use("/api/chat",chatRoutes)
-app.use("/api/session",sessionRoutes)
+app.use("/api/sessions",sessionRoutes)
 
 app.get('/',(req,res)=>{
     res.status(200).json({message:'successfor   api'})
 })
 app.get('/video-call',protectRoute,(req,res)=>{
-    res.status(200).json({message:'video call    api'})
+    res.status(200).json({message:'video call  api'})
 })
 
 

@@ -1,5 +1,5 @@
 
-import { chatClient, streamClient } from '../lib/stream';
+import { chatClient, streamClient } from '../lib/stream.js';
 import Session from '../models/Session.js'
 
 export async function createSession(req,res) {
@@ -40,9 +40,13 @@ export async function createSession(req,res) {
         res.status(500).json({message:"Internal server Error"})
     }
 }
+
 export async function getActiveSessions(_,res) {
     try {
-        const sessions=(await Session.find({status:"active"}).populate("host","name profileImage email clerkId")).sort({createdAt:-1}).limit(20);
+        const sessions=(await Session.find({status:"active"})
+        .populate("host","name profileImage email clerkId"))
+        .populate("participant","name profileImage email clerkId")
+        .sort({createdAt:-1}).limit(20);
         //populate find the User entity and give name image email clerkid....bcz host field have ref:"User"
 
         res.status(200).json({sessions});
@@ -142,7 +146,7 @@ export async function endSession(req,res) {
                await channel.delete();
 
                 
-                      session.status="completed";
+             session.status="completed";
                await session.save();
 
                res.status(200).json({session,message:"Session ended successfully!"})
